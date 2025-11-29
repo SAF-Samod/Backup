@@ -13,7 +13,6 @@
             --neon-pink: #ff00ff;
             --neon-green: #0aff00;
             --bg-color: #050505;
-            --glass-bg: rgba(10, 10, 10, 0.7);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -132,7 +131,7 @@
             border: 1px solid #444;
             border-left: 5px solid var(--neon-green);
             padding: 2rem;
-            max-width: 800px; /* Limits width to keep space for 3D object on right */
+            max-width: 800px;
             margin-bottom: 3rem;
             position: relative;
             backdrop-filter: blur(5px);
@@ -170,7 +169,7 @@
         .stat-item { font-size: 0.9rem; }
         .stat-label { color: #888; display: block; font-size: 0.8rem; }
 
-        /* --- LINK CARDS --- */
+        /* --- LINKS --- */
         .links-section {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -306,19 +305,20 @@
     <script>
         // --- SCENE SETUP ---
         const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        
+        // CORRECTION 1: Use FOV 45 (Standard Lens) instead of 75 (Wide Angle)
+        // This prevents the object from looking stretched/squished at the edges.
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
         
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         document.getElementById('canvas-container').appendChild(renderer.domElement);
 
-        // --- GROUPING FOR MOVEMENT ---
         const sceneGroup = new THREE.Group();
         scene.add(sceneGroup);
 
         // --- GEOMETRY ---
-        // 1. Outer Sphere
         const geometry = new THREE.IcosahedronGeometry(10, 1);
         const material = new THREE.MeshBasicMaterial({ 
             color: 0x00f3ff, wireframe: true, transparent: true, opacity: 0.2
@@ -326,7 +326,6 @@
         const sphere = new THREE.Mesh(geometry, material);
         sceneGroup.add(sphere);
 
-        // 2. Inner Core
         const coreGeo = new THREE.IcosahedronGeometry(4, 0);
         const coreMat = new THREE.MeshBasicMaterial({
             color: 0xff00ff, wireframe: true, transparent: true, opacity: 0.4
@@ -334,7 +333,8 @@
         const core = new THREE.Mesh(coreGeo, coreMat);
         sceneGroup.add(core);
 
-        camera.position.z = 30;
+        // CORRECTION 2: Move camera further back because FOV is narrower
+        camera.position.z = 45;
 
         // --- INPUT INTERACTION ---
         let mouseX = 0;
@@ -360,7 +360,6 @@
         function animate() {
             requestAnimationFrame(animate);
 
-            // 1. Standard Rotation Interaction
             targetX = mouseX * 0.001;
             targetY = mouseY * 0.001;
 
@@ -370,26 +369,27 @@
             core.rotation.y -= 0.02;
             core.rotation.z += 0.02;
 
-            // 2. SCROLL ANIMATION LOGIC
+            // SCROLL CALCULATION
             const scrollY = window.scrollY;
             const maxScroll = window.innerHeight; 
             
-            // Calculate progress (0.0 to 1.0)
             let progress = Math.min(scrollY / maxScroll, 1);
-            progress = progress * progress * (3 - 2 * progress); // Ease-in-out
+            progress = progress * progress * (3 - 2 * progress); // Smoothstep easing
 
-            // Calculate Target Position (Top Right)
             const aspect = window.innerWidth / window.innerHeight;
             
-            // Move Right (X) and Up (Y)
-            const moveX = 16 * aspect; 
-            const moveY = 12;          
+            // CORRECTION 3: Adjust movement limits to keep object within safe bounds (No distortion)
+            // With FOV 45, the frustum is tighter, so we use smaller coordinate shifts.
+            const moveX = 14 * aspect; 
+            const moveY = 10;          
             
+            // Interpolate Position
             sceneGroup.position.x = moveX * progress;
             sceneGroup.position.y = moveY * progress;
             
-            // Scale: 1 -> 0.4
-            const scaleFactor = 1 - (0.6 * progress);
+            // CORRECTION 4: Proportional Scale
+            // Scaling X, Y, and Z by the exact same amount ensures it stays a perfect sphere.
+            const scaleFactor = 1 - (0.55 * progress); // Shrinks to 45% of size
             sceneGroup.scale.set(scaleFactor, scaleFactor, scaleFactor);
 
             if(progress < 0.5) {
