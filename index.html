@@ -11,7 +11,7 @@
         :root {
             --neon-cyan: #00f3ff;
             --neon-pink: #ff00ff;
-            --bg-color: #0a0a0a;
+            --bg-color: #050505;
             --glass-bg: rgba(10, 10, 10, 0.7);
         }
 
@@ -26,27 +26,23 @@
             color: #e0e0e0;
             font-family: 'Rajdhani', sans-serif;
             overflow-x: hidden;
-            height: 100vh;
+            width: 100%;
         }
 
-        /* --- BACKGROUND GLITCH & SCANLINES --- */
+        /* --- BACKGROUND LAYERS --- */
         .crt-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
-            height: 100vh;
-            pointer-events: none; /* Let clicks pass through */
-            z-index: 0;
-            background: linear-gradient(
-                rgba(18, 16, 16, 0) 50%, 
-                rgba(0, 0, 0, 0.25) 50%
-            );
+            height: 100dvh; /* Dynamic Height */
+            pointer-events: none;
+            z-index: 10;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
             background-size: 100% 4px;
             animation: scanlines 0.2s linear infinite;
         }
 
-        /* Subtle screen flicker */
         .glitch-bg {
             position: fixed;
             top: 0;
@@ -58,16 +54,8 @@
             animation: flicker 0.15s infinite;
         }
 
-        @keyframes scanlines {
-            0% { background-position: 0 0; }
-            100% { background-position: 0 4px; }
-        }
-
-        @keyframes flicker {
-            0% { opacity: 0.97; }
-            50% { opacity: 1; }
-            100% { opacity: 0.98; }
-        }
+        @keyframes scanlines { from { background-position: 0 0; } to { background-position: 0 4px; } }
+        @keyframes flicker { 0% { opacity: 0.97; } 50% { opacity: 1; } 100% { opacity: 0.98; } }
 
         /* --- 3D CANVAS --- */
         #canvas-container {
@@ -75,56 +63,58 @@
             top: 0;
             left: 0;
             width: 100%;
-            height: 100%;
+            height: 100dvh;
             z-index: -1;
         }
 
         /* --- LAYOUT --- */
         .container {
-            max-width: 1100px;
+            width: 100%;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 2rem;
             position: relative;
             z-index: 2;
-            height: 100vh;
-            overflow-y: auto; /* Allow scrolling content over fixed bg */
         }
 
+        /* Dynamic Header Section - Always takes full screen height */
         header {
-            min-height: 80vh;
+            min-height: 90dvh; /* Takes up 90% of the visible mobile screen */
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: flex-start;
         }
 
+        /* --- DYNAMIC TYPOGRAPHY --- */
         h2 {
             font-family: 'Orbitron', sans-serif;
-            font-size: 1.2rem;
+            font-size: clamp(1rem, 3vw, 1.5rem); /* Scales between 1rem and 1.5rem */
             color: var(--neon-cyan);
             letter-spacing: 3px;
             margin-bottom: 5px;
             text-shadow: 0 0 5px var(--neon-cyan);
         }
 
-        /* --- TEXT GLITCH EFFECT --- */
         .glitch-wrapper {
             position: relative;
             margin-bottom: 1rem;
+            width: 100%;
         }
 
         .glitch {
             font-family: 'Orbitron', sans-serif;
-            font-size: 4.5rem;
+            /* Dynamic Font Size: Minimum 2.5rem, Preferred 8vw, Maximum 6rem */
+            font-size: clamp(2.5rem, 8vw, 6rem); 
             font-weight: 900;
             text-transform: uppercase;
             position: relative;
             color: white;
-            letter-spacing: 0.05em;
+            line-height: 1.1;
+            letter-spacing: 0.02em;
         }
 
-        .glitch::before,
-        .glitch::after {
+        .glitch::before, .glitch::after {
             content: attr(data-text);
             position: absolute;
             top: 0;
@@ -148,43 +138,39 @@
             animation: glitch-anim-1 2.5s infinite linear alternate-reverse;
         }
 
-        @keyframes glitch-anim-1 {
-            0% { clip: rect(20px, 9999px, 80px, 0); }
-            20% { clip: rect(90px, 9999px, 10px, 0); }
-            40% { clip: rect(40px, 9999px, 50px, 0); }
-            60% { clip: rect(80px, 9999px, 20px, 0); }
-            80% { clip: rect(10px, 9999px, 90px, 0); }
-            100% { clip: rect(60px, 9999px, 30px, 0); }
-        }
-
-        @keyframes glitch-anim-2 {
-            0% { clip: rect(90px, 9999px, 10px, 0); }
-            20% { clip: rect(10px, 9999px, 90px, 0); }
-            40% { clip: rect(50px, 9999px, 20px, 0); }
-            60% { clip: rect(10px, 9999px, 40px, 0); }
-            80% { clip: rect(90px, 9999px, 10px, 0); }
-            100% { clip: rect(30px, 9999px, 60px, 0); }
-        }
+        /* Glitch Keyframes (same as before) */
+        @keyframes glitch-anim-1 { 0% { clip: rect(20px, 9999px, 80px, 0); } 100% { clip: rect(60px, 9999px, 30px, 0); } }
+        @keyframes glitch-anim-2 { 0% { clip: rect(90px, 9999px, 10px, 0); } 100% { clip: rect(30px, 9999px, 60px, 0); } }
 
         .subtitle {
-            font-size: 1.3rem;
+            font-size: clamp(1rem, 2vw, 1.4rem);
             margin-top: 1rem;
             border-left: 4px solid var(--neon-pink);
             padding-left: 20px;
-            max-width: 650px;
+            max-width: 700px;
             background: linear-gradient(90deg, rgba(255,0,255,0.1), transparent);
         }
 
-        .subtitle strong {
-            color: var(--neon-cyan);
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #888;
+            font-size: 0.8rem;
+            animation: bounce 2s infinite;
         }
 
-        /* --- CARDS --- */
+        @keyframes bounce { 0%, 20%, 50%, 80%, 100% {transform: translateX(-50%) translateY(0);} 40% {transform: translateX(-50%) translateY(-10px);} 60% {transform: translateX(-50%) translateY(-5px);} }
+
+        /* --- CARDS GRID --- */
         .links-section {
             display: grid;
+            /* Auto-fit columns: minimum 280px wide, but stretch to fill available space */
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 25px;
             padding-bottom: 5rem;
+            margin-top: 2rem;
         }
 
         .card {
@@ -195,7 +181,8 @@
             color: white;
             transition: 0.3s;
             position: relative;
-            clip-path: polygon(0 0, 100% 0, 100% 85%, 90% 100%, 0 100%); /* Cyberpunk Angle */
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 90% 100%, 0 100%);
+            backdrop-filter: blur(5px);
         }
 
         .card::before {
@@ -210,7 +197,7 @@
         }
 
         .card:hover {
-            transform: translateY(-5px) translateX(5px);
+            transform: translateY(-5px);
             background: rgba(0, 243, 255, 0.1);
             border-color: var(--neon-cyan);
         }
@@ -238,12 +225,6 @@
             color: #666;
             background: #050505;
         }
-
-        /* Mobile */
-        @media (max-width: 768px) {
-            .glitch { font-size: 2.8rem; }
-            header { min-height: 70vh; }
-        }
     </style>
 </head>
 <body>
@@ -259,15 +240,15 @@
                 <h1 class="glitch" data-text="SAF THE CTHULHU">SAF THE CTHULHU</h1>
             </div>
             
-            <p class="subtitle">
+            <div class="subtitle">
                 Identity: <strong>Samod Abhimana Fernando</strong><br>
                 Class: Music Producer // 3D Animator // Comp. Engineer<br>
                 Status: <span style="color:var(--neon-cyan)">[ONLINE]</span>
-            </p>
+            </div>
             
-            <p style="margin-top: 20px; color: #888; font-size: 0.9rem;">
-                &gt; Move your mouse to interact with the core.
-            </p>
+            <div class="scroll-indicator">
+                SCROLL FOR DATA_
+            </div>
         </header>
 
         <section class="links-section">
@@ -304,40 +285,42 @@
     </div>
 
     <script>
-        // --- INTERACTIVE 3D ELEMENT ---
+        // --- 3D SCENE SETUP ---
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
         
+        // Initial sizing
         renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Optimizes performance on high-DPI screens
         document.getElementById('canvas-container').appendChild(renderer.domElement);
 
-        // GEOMETRY: Icosahedron (Tech Sphere)
+        // --- GEOMETRY ---
+        // Icosahedron (Tech Sphere)
         const geometry = new THREE.IcosahedronGeometry(10, 1);
         const material = new THREE.MeshBasicMaterial({ 
             color: 0x00f3ff, // Neon Cyan
             wireframe: true,
             transparent: true,
-            opacity: 0.3
+            opacity: 0.2
         });
-        
         const sphere = new THREE.Mesh(geometry, material);
         scene.add(sphere);
 
-        // INNER CORE (Smaller, Pink)
+        // Inner Core
         const coreGeo = new THREE.IcosahedronGeometry(4, 0);
         const coreMat = new THREE.MeshBasicMaterial({
             color: 0xff00ff, // Neon Pink
             wireframe: true,
             transparent: true,
-            opacity: 0.5
+            opacity: 0.4
         });
         const core = new THREE.Mesh(coreGeo, coreMat);
         scene.add(core);
 
         camera.position.z = 30;
 
-        // MOUSE INTERACTION VARIABLES
+        // --- DYNAMIC INTERACTION (MOUSE & TOUCH) ---
         let mouseX = 0;
         let mouseY = 0;
         let targetX = 0;
@@ -346,35 +329,50 @@
         const windowHalfX = window.innerWidth / 2;
         const windowHalfY = window.innerHeight / 2;
 
+        // Mouse listener
         document.addEventListener('mousemove', (event) => {
             mouseX = (event.clientX - windowHalfX);
             mouseY = (event.clientY - windowHalfY);
         });
 
-        // ANIMATION LOOP
+        // Touch listener (for mobile interactivity)
+        document.addEventListener('touchmove', (event) => {
+            if (event.touches.length > 0) {
+                mouseX = (event.touches[0].clientX - windowHalfX);
+                mouseY = (event.touches[0].clientY - windowHalfY);
+            }
+        });
+
+        // --- ANIMATION LOOP ---
         function animate() {
             requestAnimationFrame(animate);
 
             targetX = mouseX * 0.001;
             targetY = mouseY * 0.001;
 
-            // Rotate Outer Sphere (Follows mouse smoothly)
-            sphere.rotation.y += 0.5 * (targetX - sphere.rotation.y);
-            sphere.rotation.x += 0.5 * (targetY - sphere.rotation.x);
+            // Smooth rotation with damping
+            sphere.rotation.y += 0.05 * (targetX - sphere.rotation.y);
+            sphere.rotation.x += 0.05 * (targetY - sphere.rotation.x);
             
-            // Auto Rotate Core (Opposite direction)
+            // Core auto-rotation
             core.rotation.y -= 0.02;
             core.rotation.z += 0.02;
+
+            // Subtle floating effect
+            sphere.position.y = Math.sin(Date.now() * 0.001) * 0.5;
 
             renderer.render(scene, camera);
         }
 
         animate();
 
-        // Handle Resize
+        // --- DYNAMIC RESIZING ---
         window.addEventListener('resize', () => {
+            // Update camera aspect ratio
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
+
+            // Update renderer size
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
     </script>
