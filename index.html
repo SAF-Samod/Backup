@@ -11,6 +11,7 @@
         :root {
             --neon-cyan: #00f3ff;
             --neon-pink: #ff00ff;
+            --neon-green: #0aff00;
             --bg-color: #050505;
             --glass-bg: rgba(10, 10, 10, 0.7);
         }
@@ -56,7 +57,7 @@
         }
 
         header {
-            height: 100dvh; /* Full screen height for the landing */
+            height: 100dvh;
             display: flex; flex-direction: column;
             justify-content: center; align-items: flex-start;
         }
@@ -114,8 +115,7 @@
 
         /* --- CONTENT SECTION --- */
         .content-area {
-            /* Pushing content down so it appears after scrolling */
-            margin-top: 10vh; 
+            margin-top: 5vh; 
             padding-bottom: 10rem;
         }
 
@@ -123,8 +123,54 @@
             font-family: 'Orbitron', sans-serif;
             font-size: 2rem; color: white; margin-bottom: 2rem;
             border-bottom: 2px solid var(--neon-cyan); display: inline-block;
+            margin-top: 3rem;
         }
 
+        /* --- ABOUT ME TERMINAL --- */
+        .about-terminal {
+            background: rgba(10, 10, 10, 0.85);
+            border: 1px solid #444;
+            border-left: 5px solid var(--neon-green);
+            padding: 2rem;
+            max-width: 800px; /* Limits width to keep space for 3D object on right */
+            margin-bottom: 3rem;
+            position: relative;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.05);
+        }
+
+        .about-terminal h3 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--neon-green);
+            margin-bottom: 1rem;
+            letter-spacing: 2px;
+        }
+
+        .terminal-text {
+            font-family: 'Courier New', monospace;
+            line-height: 1.6;
+            color: #ccc;
+        }
+
+        .terminal-text strong { color: white; }
+        .highlight { color: var(--neon-cyan); }
+        .blink { animation: blinker 1s linear infinite; }
+        
+        @keyframes blinker { 50% { opacity: 0; } }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+            border-top: 1px dashed #444;
+            padding-top: 1rem;
+        }
+
+        .stat-item { font-size: 0.9rem; }
+        .stat-label { color: #888; display: block; font-size: 0.8rem; }
+
+        /* --- LINK CARDS --- */
         .links-section {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -150,6 +196,7 @@
         footer {
             text-align: center; padding: 2rem;
             border-top: 1px solid #333; color: #666; background: #050505;
+            margin-top: 3rem;
         }
     </style>
 </head>
@@ -168,16 +215,58 @@
             
             <div class="subtitle">
                 Identity: <strong>Samod Abhimana Fernando</strong><br>
-                Class: Music Producer // 3D Animator // Comp. Engineer<br>
-                Status: <span style="color:var(--neon-cyan)">[ONLINE]</span>
+                Target: Game Director // Developer<br>
+                Status: <span style="color:var(--neon-green)">[ONLINE]</span>
             </div>
             
             <div class="scroll-indicator">
-                SCROLL TO ACCESS DATA_
+                SCROLL TO ACCESS PROFILE_
             </div>
         </header>
 
         <div class="content-area">
+            
+            <h2 class="section-title">PLAYER_PROFILE</h2>
+            
+            <div class="about-terminal">
+                <h3>&gt; USER_BIO_LOADED</h3>
+                <div class="terminal-text">
+                    <p>
+                        I am <span class="highlight">Samod Abhimana Fernando</span>. 
+                        Currently an undergraduate at <strong>General Sir John Kotelawala Defence University</strong> studying BSc (Hons) in Computer Engineering.
+                    </p>
+                    <br>
+                    <p>
+                        My ultimate goal is to become a <strong>Game Director & Developer</strong>. 
+                        I bridge the gap between technical logic and artistic chaos. By combining my background in 
+                        <span class="highlight">Computer Engineering</span> with my passion for 
+                        <span class="highlight">Music Production</span> and <span class="highlight">3D Animation</span>, 
+                        I aim to build immersive digital worlds and narrative experiences.
+                    </p>
+                    <br>
+                    <p>System Check: <span class="blink">_</span></p>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-item">
+                        <span class="stat-label">MAIN CLASS</span>
+                        Computer Engineer
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">SUB CLASS</span>
+                        Audio/Visual Artist
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">TOOLKIT</span>
+                        FL Studio / 3D / Code
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">ASPIRATION</span>
+                        Game Director
+                    </div>
+                </div>
+            </div>
+
             <h2 class="section-title">PROJECT DATABANKS</h2>
             
             <section class="links-section">
@@ -210,7 +299,7 @@
 
         <footer>
             <p>CS12012 Assignment // ID: [INSERT YOUR INDEX NO HERE]</p>
-            <p>&copy; 2024 SAF Samod. All Rights Reserved.</p>
+            <p>&copy; 2024 Samod Abhimana Fernando. All Rights Reserved.</p>
         </footer>
     </div>
 
@@ -225,7 +314,6 @@
         document.getElementById('canvas-container').appendChild(renderer.domElement);
 
         // --- GROUPING FOR MOVEMENT ---
-        // We create a Group so we can move the Sphere and Core together
         const sceneGroup = new THREE.Group();
         scene.add(sceneGroup);
 
@@ -272,7 +360,7 @@
         function animate() {
             requestAnimationFrame(animate);
 
-            // 1. Standard Rotation Interaction (Mouse movement)
+            // 1. Standard Rotation Interaction
             targetX = mouseX * 0.001;
             targetY = mouseY * 0.001;
 
@@ -284,33 +372,26 @@
 
             // 2. SCROLL ANIMATION LOGIC
             const scrollY = window.scrollY;
-            const maxScroll = window.innerHeight; // The animation completes after 1 screen height
+            const maxScroll = window.innerHeight; 
             
             // Calculate progress (0.0 to 1.0)
             let progress = Math.min(scrollY / maxScroll, 1);
-            
-            // Smoothstep function for smoother ease-in/ease-out
-            progress = progress * progress * (3 - 2 * progress);
+            progress = progress * progress * (3 - 2 * progress); // Ease-in-out
 
             // Calculate Target Position (Top Right)
-            // Aspect ratio helps us find the "edge" of the screen in 3D space
             const aspect = window.innerWidth / window.innerHeight;
             
-            // Target coordinates (Adjusted for generic FOV)
-            // X: Moves right. Y: Moves up. Z: Stays same.
-            const moveX = 16 * aspect; // Scales with width
-            const moveY = 12;          // Scales roughly with height
+            // Move Right (X) and Up (Y)
+            const moveX = 16 * aspect; 
+            const moveY = 12;          
             
-            // Apply Interpolation (Lerp)
-            // Position: 0 -> Target
             sceneGroup.position.x = moveX * progress;
             sceneGroup.position.y = moveY * progress;
             
-            // Scale: 1 -> 0.4 (Shrink)
+            // Scale: 1 -> 0.4
             const scaleFactor = 1 - (0.6 * progress);
             sceneGroup.scale.set(scaleFactor, scaleFactor, scaleFactor);
 
-            // Add floating effect only when large (optional, keeps it steady when small)
             if(progress < 0.5) {
                  sphere.position.y = Math.sin(Date.now() * 0.001) * 0.5;
             } else {
