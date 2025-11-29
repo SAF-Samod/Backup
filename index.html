@@ -4,15 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SAF The Cthulhu | Portfolio</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
     <style>
         :root {
-            --neon-cyan: #0ff;
-            --neon-pink: #f0f;
-            --bg-color: #050505;
-            --glass-bg: rgba(255, 255, 255, 0.05);
+            --neon-cyan: #00f3ff;
+            --neon-pink: #ff00ff;
+            --bg-color: #0a0a0a;
+            --glass-bg: rgba(10, 10, 10, 0.7);
         }
 
         * {
@@ -23,12 +23,53 @@
 
         body {
             background-color: var(--bg-color);
-            color: white;
+            color: #e0e0e0;
             font-family: 'Rajdhani', sans-serif;
             overflow-x: hidden;
+            height: 100vh;
         }
 
-        /* --- 3D Canvas Background --- */
+        /* --- BACKGROUND GLITCH & SCANLINES --- */
+        .crt-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none; /* Let clicks pass through */
+            z-index: 0;
+            background: linear-gradient(
+                rgba(18, 16, 16, 0) 50%, 
+                rgba(0, 0, 0, 0.25) 50%
+            );
+            background-size: 100% 4px;
+            animation: scanlines 0.2s linear infinite;
+        }
+
+        /* Subtle screen flicker */
+        .glitch-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background-color: var(--bg-color);
+            animation: flicker 0.15s infinite;
+        }
+
+        @keyframes scanlines {
+            0% { background-position: 0 0; }
+            100% { background-position: 0 4px; }
+        }
+
+        @keyframes flicker {
+            0% { opacity: 0.97; }
+            50% { opacity: 1; }
+            100% { opacity: 0.98; }
+        }
+
+        /* --- 3D CANVAS --- */
         #canvas-container {
             position: fixed;
             top: 0;
@@ -36,20 +77,21 @@
             width: 100%;
             height: 100%;
             z-index: -1;
-            opacity: 0.6;
         }
 
-        /* --- Layout --- */
+        /* --- LAYOUT --- */
         .container {
-            max-width: 1000px;
+            max-width: 1100px;
             margin: 0 auto;
             padding: 2rem;
             position: relative;
-            z-index: 1;
+            z-index: 2;
+            height: 100vh;
+            overflow-y: auto; /* Allow scrolling content over fixed bg */
         }
 
         header {
-            height: 90vh;
+            min-height: 80vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -57,20 +99,23 @@
         }
 
         h2 {
-            font-size: 1.5rem;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
             color: var(--neon-cyan);
-            letter-spacing: 2px;
-            margin-bottom: 10px;
+            letter-spacing: 3px;
+            margin-bottom: 5px;
+            text-shadow: 0 0 5px var(--neon-cyan);
         }
 
-        /* --- Glitch Effect CSS --- */
+        /* --- TEXT GLITCH EFFECT --- */
         .glitch-wrapper {
             position: relative;
+            margin-bottom: 1rem;
         }
 
         .glitch {
             font-family: 'Orbitron', sans-serif;
-            font-size: 5rem;
+            font-size: 4.5rem;
             font-weight: 900;
             text-transform: uppercase;
             position: relative;
@@ -86,116 +131,142 @@
             left: 0;
             width: 100%;
             height: 100%;
+            background: var(--bg-color);
         }
 
         .glitch::before {
-            left: 2px;
-            text-shadow: -1px 0 var(--neon-pink);
-            clip: rect(44px, 450px, 56px, 0);
-            animation: glitch-anim 5s infinite linear alternate-reverse;
+            left: 3px;
+            text-shadow: -2px 0 var(--neon-pink);
+            clip: rect(24px, 550px, 90px, 0);
+            animation: glitch-anim-2 3s infinite linear alternate-reverse;
         }
 
         .glitch::after {
-            left: -2px;
-            text-shadow: -1px 0 var(--neon-cyan);
-            clip: rect(44px, 450px, 56px, 0);
-            animation: glitch-anim2 2.5s infinite linear alternate-reverse;
+            left: -3px;
+            text-shadow: -2px 0 var(--neon-cyan);
+            clip: rect(85px, 550px, 140px, 0);
+            animation: glitch-anim-1 2.5s infinite linear alternate-reverse;
         }
 
-        @keyframes glitch-anim {
-            0% { clip: rect(30px, 9999px, 10px, 0); }
-            20% { clip: rect(85px, 9999px, 90px, 0); }
-            40% { clip: rect(10px, 9999px, 50px, 0); }
-            60% { clip: rect(40px, 9999px, 20px, 0); }
-            80% { clip: rect(65px, 9999px, 40px, 0); }
-            100% { clip: rect(20px, 9999px, 70px, 0); }
+        @keyframes glitch-anim-1 {
+            0% { clip: rect(20px, 9999px, 80px, 0); }
+            20% { clip: rect(90px, 9999px, 10px, 0); }
+            40% { clip: rect(40px, 9999px, 50px, 0); }
+            60% { clip: rect(80px, 9999px, 20px, 0); }
+            80% { clip: rect(10px, 9999px, 90px, 0); }
+            100% { clip: rect(60px, 9999px, 30px, 0); }
         }
 
-        @keyframes glitch-anim2 {
-            0% { clip: rect(60px, 9999px, 20px, 0); }
-            20% { clip: rect(10px, 9999px, 70px, 0); }
-            40% { clip: rect(90px, 9999px, 10px, 0); }
-            60% { clip: rect(30px, 9999px, 60px, 0); }
-            80% { clip: rect(15px, 9999px, 90px, 0); }
-            100% { clip: rect(55px, 9999px, 20px, 0); }
+        @keyframes glitch-anim-2 {
+            0% { clip: rect(90px, 9999px, 10px, 0); }
+            20% { clip: rect(10px, 9999px, 90px, 0); }
+            40% { clip: rect(50px, 9999px, 20px, 0); }
+            60% { clip: rect(10px, 9999px, 40px, 0); }
+            80% { clip: rect(90px, 9999px, 10px, 0); }
+            100% { clip: rect(30px, 9999px, 60px, 0); }
         }
 
         .subtitle {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             margin-top: 1rem;
-            border-left: 3px solid var(--neon-pink);
-            padding-left: 15px;
-            max-width: 600px;
-            line-height: 1.6;
+            border-left: 4px solid var(--neon-pink);
+            padding-left: 20px;
+            max-width: 650px;
+            background: linear-gradient(90deg, rgba(255,0,255,0.1), transparent);
         }
 
-        /* --- Link Cards --- */
+        .subtitle strong {
+            color: var(--neon-cyan);
+        }
+
+        /* --- CARDS --- */
         .links-section {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 5rem;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            padding-bottom: 5rem;
         }
 
         .card {
-            background: var(--glass-bg);
+            background: rgba(20, 20, 20, 0.6);
             border: 1px solid #333;
-            padding: 20px;
+            padding: 25px;
             text-decoration: none;
             color: white;
             transition: 0.3s;
-            backdrop-filter: blur(5px);
             position: relative;
-            overflow: hidden;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 90% 100%, 0 100%); /* Cyberpunk Angle */
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 2px;
+            height: 100%;
+            background: var(--neon-cyan);
+            transition: 0.3s;
         }
 
         .card:hover {
+            transform: translateY(-5px) translateX(5px);
+            background: rgba(0, 243, 255, 0.1);
             border-color: var(--neon-cyan);
-            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
-            transform: translateY(-5px);
+        }
+
+        .card:hover::before {
+            background: var(--neon-pink);
+            width: 5px;
         }
 
         .card h3 {
             font-family: 'Orbitron', sans-serif;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             color: var(--neon-cyan);
         }
 
         .card p {
-            font-size: 0.9rem;
-            color: #aaa;
+            font-size: 0.95rem;
+            color: #bbb;
         }
 
-        /* --- Footer --- */
         footer {
             text-align: center;
             padding: 2rem;
-            font-size: 0.8rem;
+            border-top: 1px solid #333;
             color: #666;
-            border-top: 1px solid #222;
+            background: #050505;
         }
 
-        /* Mobile Adjustments */
+        /* Mobile */
         @media (max-width: 768px) {
-            .glitch { font-size: 3rem; }
-            header { height: 80vh; }
+            .glitch { font-size: 2.8rem; }
+            header { min-height: 70vh; }
         }
     </style>
 </head>
 <body>
 
+    <div class="glitch-bg"></div>
+    <div class="crt-overlay"></div>
     <div id="canvas-container"></div>
 
     <div class="container">
         <header>
-            <h2>HELLO WORLD_</h2>
+            <h2>SYSTEM.INIT( )</h2>
             <div class="glitch-wrapper">
                 <h1 class="glitch" data-text="SAF THE CTHULHU">SAF THE CTHULHU</h1>
             </div>
+            
             <p class="subtitle">
-                Identity: <b>Samod Abhimana Fernando</b><br>
-                Music Producer (FL Studio) // 3D Animator // <br>
-                Computer Engineering Undergraduate @ KDU
+                Identity: <strong>Samod Abhimana Fernando</strong><br>
+                Class: Music Producer // 3D Animator // Comp. Engineer<br>
+                Status: <span style="color:var(--neon-cyan)">[ONLINE]</span>
+            </p>
+            
+            <p style="margin-top: 20px; color: #888; font-size: 0.9rem;">
+                &gt; Move your mouse to interact with the core.
             </p>
         </header>
 
@@ -228,12 +299,12 @@
 
         <footer>
             <p>CS12012 Assignment // ID: [INSERT YOUR INDEX NO HERE]</p>
-            <p>&copy; 2024 SAF Samod. System Online.</p>
+            <p>&copy; 2024 SAF Samod. All Rights Reserved.</p>
         </footer>
     </div>
 
     <script>
-        // --- THREE.JS CYBERPUNK GRID ANIMATION ---
+        // --- INTERACTIVE 3D ELEMENT ---
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
@@ -241,40 +312,66 @@
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.getElementById('canvas-container').appendChild(renderer.domElement);
 
-        // Create a grid
-        const geometry = new THREE.PlaneGeometry(100, 100, 40, 40);
+        // GEOMETRY: Icosahedron (Tech Sphere)
+        const geometry = new THREE.IcosahedronGeometry(10, 1);
         const material = new THREE.MeshBasicMaterial({ 
-            color: 0x00ffff, 
+            color: 0x00f3ff, // Neon Cyan
             wireframe: true,
             transparent: true,
-            opacity: 0.15
+            opacity: 0.3
         });
-        const plane = new THREE.Mesh(geometry, material);
         
-        scene.add(plane);
-        
-        // Initial positioning
-        plane.rotation.x = Math.PI / 2;
-        camera.position.y = 10;
-        camera.position.z = 20;
-        camera.rotation.x = -0.5;
+        const sphere = new THREE.Mesh(geometry, material);
+        scene.add(sphere);
 
-        // Animation Loop
+        // INNER CORE (Smaller, Pink)
+        const coreGeo = new THREE.IcosahedronGeometry(4, 0);
+        const coreMat = new THREE.MeshBasicMaterial({
+            color: 0xff00ff, // Neon Pink
+            wireframe: true,
+            transparent: true,
+            opacity: 0.5
+        });
+        const core = new THREE.Mesh(coreGeo, coreMat);
+        scene.add(core);
+
+        camera.position.z = 30;
+
+        // MOUSE INTERACTION VARIABLES
+        let mouseX = 0;
+        let mouseY = 0;
+        let targetX = 0;
+        let targetY = 0;
+
+        const windowHalfX = window.innerWidth / 2;
+        const windowHalfY = window.innerHeight / 2;
+
+        document.addEventListener('mousemove', (event) => {
+            mouseX = (event.clientX - windowHalfX);
+            mouseY = (event.clientY - windowHalfY);
+        });
+
+        // ANIMATION LOOP
         function animate() {
             requestAnimationFrame(animate);
+
+            targetX = mouseX * 0.001;
+            targetY = mouseY * 0.001;
+
+            // Rotate Outer Sphere (Follows mouse smoothly)
+            sphere.rotation.y += 0.5 * (targetX - sphere.rotation.y);
+            sphere.rotation.x += 0.5 * (targetY - sphere.rotation.x);
             
-            // Rotate the plane slightly to simulate movement
-            plane.rotation.z += 0.002;
-            
-            // Add a "breathing" effect to the camera
-            camera.position.y = 10 + Math.sin(Date.now() * 0.001) * 2;
+            // Auto Rotate Core (Opposite direction)
+            core.rotation.y -= 0.02;
+            core.rotation.z += 0.02;
 
             renderer.render(scene, camera);
         }
 
         animate();
 
-        // Handle Window Resize
+        // Handle Resize
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
