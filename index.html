@@ -23,6 +23,46 @@
             font-family: 'Rajdhani', sans-serif;
             overflow-x: hidden;
             width: 100%;
+            cursor: none; /* Hide default cursor */
+        }
+
+        /* --- CUSTOM CURSOR --- */
+        #cursor, #cursor-dot {
+            position: fixed;
+            top: 0; left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            pointer-events: none; /* Let clicks pass through */
+            z-index: 9999;
+        }
+
+        /* The Outer Ring (Laggy) */
+        #cursor {
+            width: 40px; height: 40px;
+            border: 1px solid var(--neon-cyan);
+            box-shadow: 0 0 10px var(--neon-cyan);
+            transition: width 0.2s, height 0.2s, background-color 0.2s, border-color 0.2s;
+        }
+
+        /* The Inner Dot (Instant) */
+        #cursor-dot {
+            width: 6px; height: 6px;
+            background-color: var(--neon-pink);
+            box-shadow: 0 0 5px var(--neon-pink);
+        }
+
+        /* Hover State (When over links) */
+        body.hovering #cursor {
+            width: 60px; height: 60px;
+            background-color: rgba(255, 0, 255, 0.1);
+            border-color: var(--neon-pink);
+            box-shadow: 0 0 20px var(--neon-pink);
+        }
+
+        /* Hide custom cursor on Mobile */
+        @media (max-width: 768px) {
+            body { cursor: auto; }
+            #cursor, #cursor-dot { display: none; }
         }
 
         /* --- BACKGROUND EFFECTS --- */
@@ -182,6 +222,7 @@
             transition: 0.3s; position: relative;
             clip-path: polygon(0 0, 100% 0, 100% 85%, 90% 100%, 0 100%);
             backdrop-filter: blur(5px);
+            cursor: none; /* Ensure custom cursor is seen */
         }
 
         .card:hover {
@@ -200,6 +241,9 @@
     </style>
 </head>
 <body>
+
+    <div id="cursor"></div>
+    <div id="cursor-dot"></div>
 
     <div class="glitch-bg"></div>
     <div class="crt-overlay"></div>
@@ -303,11 +347,32 @@
     </div>
 
     <script>
-        // --- SCENE SETUP ---
-        const scene = new THREE.Scene();
+        // --- CUSTOM CURSOR LOGIC ---
+        const cursor = document.getElementById('cursor');
+        const cursorDot = document.getElementById('cursor-dot');
         
-        // CORRECTION 1: Use FOV 45 (Standard Lens) instead of 75 (Wide Angle)
-        // This prevents the object from looking stretched/squished at the edges.
+        let mouseX = 0, mouseY = 0;
+        let cursorX = 0, cursorY = 0;
+
+        // Track mouse position
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            
+            // Move the small dot instantly
+            cursorDot.style.left = mouseX + 'px';
+            cursorDot.style.top = mouseY + 'px';
+        });
+
+        // Add hover effects for links
+        const clickableElements = document.querySelectorAll('a, button');
+        clickableElements.forEach(el => {
+            el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+            el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+        });
+
+        // --- 3D SCENE SETUP (Optimized for FOV 45) ---
+        const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
         
@@ -318,7 +383,7 @@
         const sceneGroup = new THREE.Group();
         scene.add(sceneGroup);
 
-        // --- GEOMETRY ---
+        // GEOMETRY
         const geometry = new THREE.IcosahedronGeometry(10, 1);
         const material = new THREE.MeshBasicMaterial({ 
             color: 0x00f3ff, wireframe: true, transparent: true, opacity: 0.2
@@ -333,35 +398,24 @@
         const core = new THREE.Mesh(coreGeo, coreMat);
         sceneGroup.add(core);
 
-        // CORRECTION 2: Move camera further back because FOV is narrower
+        // Camera Z pos
         camera.position.z = 45;
 
-        // --- INPUT INTERACTION ---
-        let mouseX = 0;
-        let mouseY = 0;
-        let targetX = 0;
-        let targetY = 0;
-        const windowHalfX = window.innerWidth / 2;
-        const windowHalfY = window.innerHeight / 2;
-
-        document.addEventListener('mousemove', (event) => {
-            mouseX = (event.clientX - windowHalfX);
-            mouseY = (event.clientY - windowHalfY);
-        });
-
-        document.addEventListener('touchmove', (event) => {
-            if (event.touches.length > 0) {
-                mouseX = (event.touches[0].clientX - windowHalfX);
-                mouseY = (event.touches[0].clientY - windowHalfY);
-            }
-        });
-
-        // --- ANIMATION & SCROLL LOGIC ---
+        // --- ANIMATION LOOP ---
         function animate() {
             requestAnimationFrame(animate);
 
-            targetX = mouseX * 0.001;
-            targetY = mouseY * 0.001;
+            // 1. CURSOR ANIMATION (Linear Interpolation for smooth lag)
+            const friction = 0.15; // Lower = more lag
+            cursorX += (mouseX - cursorX) * friction;
+            cursorY += (mouseY - cursorY) * friction;
+            cursor.style.left = cursorX + 'px';
+            cursor.style.top = cursorY + 'px';
+
+            // 2. 3D OBJECT ANIMATION
+            // Rotation based on mouse
+            const targetX = (mouseX - window.innerWidth / 2) * 0.001;
+            const targetY = (mouseY - window.innerHeight / 2) * 0.001;
 
             sphere.rotation.y += 0.05 * (targetX - sphere.rotation.y);
             sphere.rotation.x += 0.05 * (targetY - sphere.rotation.x);
@@ -369,27 +423,24 @@
             core.rotation.y -= 0.02;
             core.rotation.z += 0.02;
 
-            // SCROLL CALCULATION
+            // SCROLL LOGIC
             const scrollY = window.scrollY;
             const maxScroll = window.innerHeight; 
             
             let progress = Math.min(scrollY / maxScroll, 1);
-            progress = progress * progress * (3 - 2 * progress); // Smoothstep easing
+            progress = progress * progress * (3 - 2 * progress); 
 
             const aspect = window.innerWidth / window.innerHeight;
             
-            // CORRECTION 3: Adjust movement limits to keep object within safe bounds (No distortion)
-            // With FOV 45, the frustum is tighter, so we use smaller coordinate shifts.
+            // Movement logic
             const moveX = 14 * aspect; 
             const moveY = 10;          
             
-            // Interpolate Position
             sceneGroup.position.x = moveX * progress;
             sceneGroup.position.y = moveY * progress;
             
-            // CORRECTION 4: Proportional Scale
-            // Scaling X, Y, and Z by the exact same amount ensures it stays a perfect sphere.
-            const scaleFactor = 1 - (0.55 * progress); // Shrinks to 45% of size
+            // Proportional Scale
+            const scaleFactor = 1 - (0.55 * progress);
             sceneGroup.scale.set(scaleFactor, scaleFactor, scaleFactor);
 
             if(progress < 0.5) {
