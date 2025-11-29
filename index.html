@@ -41,49 +41,18 @@
             align-items: center;
         }
 
-        /* --- AGGRESSIVE CRASH ANIMATION --- */
-        .system-crash {
-            animation: crash-out 0.8s cubic-bezier(0.6, -0.28, 0.735, 0.045) both;
+        /* GLITCH TRANSITION ANIMATION */
+        .glitch-out {
+            animation: glitch-screen-anim 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
         }
 
-        @keyframes crash-out {
-            0% { 
-                transform: scale(1); 
-                filter: hue-rotate(0deg); 
-            }
-            10% { 
-                transform: translate(-10px, 5px) skewX(5deg); 
-                filter: contrast(1.2); 
-            }
-            20% { 
-                transform: translate(15px, -10px) skewY(-5deg) scale(1.02); 
-                filter: invert(1); /* Flash White */
-            }
-            30% { 
-                transform: translate(-20px, 0) scale(1.1); 
-                clip-path: polygon(0 0, 100% 0, 100% 10%, 0 40%, 0 80%, 100% 90%, 100% 100%, 0 100%);
-                background-color: #1a0000; /* Dark Red tint */
-            }
-            45% { 
-                transform: translate(10px, 10px) skewX(-20deg) scale(1.2); 
-                filter: hue-rotate(90deg) contrast(2) brightness(1.5); 
-                clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); /* Reset clip */
-            }
-            60% { 
-                transform: scale(1.1) rotate(2deg); 
-                filter: sepia(1) blur(2px) invert(1); 
-                opacity: 1;
-            }
-            80% { 
-                transform: scale(1.5, 0.05); /* Squash vertically */
-                filter: brightness(5); /* Burn out */
-                opacity: 0.8;
-            }
-            100% { 
-                transform: scale(2, 0); /* Disappear */
-                opacity: 0; 
-                display: none; 
-            }
+        @keyframes glitch-screen-anim {
+            0% { transform: translate(0) scale(1); filter: hue-rotate(0deg); }
+            20% { transform: translate(-10px, 10px) skewX(10deg); filter: invert(1); clip-path: inset(10% 0 80% 0); }
+            40% { transform: translate(10px, -10px) skewX(-10deg); filter: invert(0); clip-path: inset(80% 0 10% 0); opacity: 1; }
+            60% { transform: translate(-5px, 5px) scale(1.05); opacity: 0.8; filter: hue-rotate(90deg); }
+            80% { transform: translate(5px, -5px); opacity: 0.4; clip-path: inset(0 0 0 0); }
+            100% { transform: translate(0) scale(1.1); opacity: 0; display: none; }
         }
 
         .loader-content {
@@ -116,7 +85,6 @@
         .log-line { opacity: 0; animation: fadeIn 0.2s forwards; margin-bottom: 2px; }
         .log-line.success { color: var(--neon-green); }
         .log-line.warning { color: var(--neon-cyan); }
-        .log-line.error { color: #ff0033; text-shadow: 0 0 5px red; }
 
         @keyframes fadeIn { to { opacity: 1; } }
 
@@ -427,7 +395,7 @@
                 { text: "> CONNECTING TO NEURAL NET...", delay: 800 },
                 { text: "> DECRYPTING BIO DATA...", delay: 1500, class: 'warning' },
                 { text: "> OPTIMIZING 3D ENGINE...", delay: 2200 },
-                { text: "> CRITICAL ERROR: REALITY FAILURE", delay: 3000, class: 'error' }
+                { text: "> SYSTEM READY.", delay: 3000, class: 'success' }
             ];
 
             // 1. Log Sequence
@@ -445,15 +413,9 @@
             setTimeout(() => { bar.style.width = "70%"; }, 1500);
             setTimeout(() => { bar.style.width = "100%"; }, 2800);
 
-            // 3. GLITCH CRASH TRANSITION
+            // 3. GLITCH TRANSITION
             setTimeout(() => {
-                loader.classList.add('system-crash');
-                
-                // Safety: remove from DOM after crash so it doesn't block interaction
-                setTimeout(() => {
-                    loader.style.display = 'none';
-                }, 1000);
-
+                loader.classList.add('glitch-out');
             }, 3300);
         });
 
