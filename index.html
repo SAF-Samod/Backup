@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAF The Cthulhu | Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <style>
+        :root {
+            --neon-cyan: #0ff;
+            --neon-pink: #f0f;
+            --bg-color: #050505;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: white;
+            font-family: 'Rajdhani', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* --- 3D Canvas Background --- */
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.6;
+        }
+
+        /* --- Layout --- */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            height: 90vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            color: var(--neon-cyan);
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        /* --- Glitch Effect CSS --- */
+        .glitch-wrapper {
+            position: relative;
+        }
+
+        .glitch {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            position: relative;
+            color: white;
+            letter-spacing: 0.05em;
+        }
+
+        .glitch::before,
+        .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .glitch::before {
+            left: 2px;
+            text-shadow: -1px 0 var(--neon-pink);
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim 5s infinite linear alternate-reverse;
+        }
+
+        .glitch::after {
+            left: -2px;
+            text-shadow: -1px 0 var(--neon-cyan);
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim2 2.5s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitch-anim {
+            0% { clip: rect(30px, 9999px, 10px, 0); }
+            20% { clip: rect(85px, 9999px, 90px, 0); }
+            40% { clip: rect(10px, 9999px, 50px, 0); }
+            60% { clip: rect(40px, 9999px, 20px, 0); }
+            80% { clip: rect(65px, 9999px, 40px, 0); }
+            100% { clip: rect(20px, 9999px, 70px, 0); }
+        }
+
+        @keyframes glitch-anim2 {
+            0% { clip: rect(60px, 9999px, 20px, 0); }
+            20% { clip: rect(10px, 9999px, 70px, 0); }
+            40% { clip: rect(90px, 9999px, 10px, 0); }
+            60% { clip: rect(30px, 9999px, 60px, 0); }
+            80% { clip: rect(15px, 9999px, 90px, 0); }
+            100% { clip: rect(55px, 9999px, 20px, 0); }
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            margin-top: 1rem;
+            border-left: 3px solid var(--neon-pink);
+            padding-left: 15px;
+            max-width: 600px;
+            line-height: 1.6;
+        }
+
+        /* --- Link Cards --- */
+        .links-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 5rem;
+        }
+
+        .card {
+            background: var(--glass-bg);
+            border: 1px solid #333;
+            padding: 20px;
+            text-decoration: none;
+            color: white;
+            transition: 0.3s;
+            backdrop-filter: blur(5px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .card h3 {
+            font-family: 'Orbitron', sans-serif;
+            margin-bottom: 10px;
+            color: var(--neon-cyan);
+        }
+
+        .card p {
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+
+        /* --- Footer --- */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            font-size: 0.8rem;
+            color: #666;
+            border-top: 1px solid #222;
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 768px) {
+            .glitch { font-size: 3rem; }
+            header { height: 80vh; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="canvas-container"></div>
+
+    <div class="container">
+        <header>
+            <h2>HELLO WORLD_</h2>
+            <div class="glitch-wrapper">
+                <h1 class="glitch" data-text="SAF THE CTHULHU">SAF THE CTHULHU</h1>
+            </div>
+            <p class="subtitle">
+                Identity: <b>Samod Abhimana Fernando</b><br>
+                Music Producer (FL Studio) // 3D Animator // <br>
+                Computer Engineering Undergraduate @ KDU
+            </p>
+        </header>
+
+        <section class="links-section">
+            <a href="https://music.apple.com/us/artist/saf-samod/1538816106" target="_blank" class="card">
+                <h3>Apple Music</h3>
+                <p>Listen to my latest productions and beats.</p>
+            </a>
+            
+            <a href="https://www.youtube.com/@safthecthulhu/videos" target="_blank" class="card">
+                <h3>YouTube</h3>
+                <p>Visualizers, 3D animations, and music videos.</p>
+            </a>
+
+            <a href="https://soundcloud.com/saf-samod" target="_blank" class="card">
+                <h3>SoundCloud</h3>
+                <p>Experimental tracks and official releases.</p>
+            </a>
+
+            <a href="https://github.com/SAF-Samod" target="_blank" class="card">
+                <h3>GitHub</h3>
+                <p>Code repositories and engineering projects.</p>
+            </a>
+
+            <a href="https://lk.linkedin.com/in/samod-fernando-a87356338" target="_blank" class="card">
+                <h3>LinkedIn</h3>
+                <p>Professional profile and academic history.</p>
+            </a>
+        </section>
+
+        <footer>
+            <p>CS12012 Assignment // ID: [INSERT YOUR INDEX NO HERE]</p>
+            <p>&copy; 2024 SAF Samod. System Online.</p>
+        </footer>
+    </div>
+
+    <script>
+        // --- THREE.JS CYBERPUNK GRID ANIMATION ---
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+        // Create a grid
+        const geometry = new THREE.PlaneGeometry(100, 100, 40, 40);
+        const material = new THREE.MeshBasicMaterial({ 
+            color: 0x00ffff, 
+            wireframe: true,
+            transparent: true,
+            opacity: 0.15
+        });
+        const plane = new THREE.Mesh(geometry, material);
+        
+        scene.add(plane);
+        
+        // Initial positioning
+        plane.rotation.x = Math.PI / 2;
+        camera.position.y = 10;
+        camera.position.z = 20;
+        camera.rotation.x = -0.5;
+
+        // Animation Loop
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            // Rotate the plane slightly to simulate movement
+            plane.rotation.z += 0.002;
+            
+            // Add a "breathing" effect to the camera
+            camera.position.y = 10 + Math.sin(Date.now() * 0.001) * 2;
+
+            renderer.render(scene, camera);
+        }
+
+        animate();
+
+        // Handle Window Resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>
