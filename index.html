@@ -509,7 +509,7 @@
             sceneGroup.position.x = moveX * progress;
             sceneGroup.position.y = moveY * progress;
             
-            const scaleFactor = 1 - (0.55 * progress);
+            const scaleFactor = 1 - (0.8 * progress);
             sceneGroup.scale.set(scaleFactor, scaleFactor, scaleFactor);
 
             if(progress < 0.5) {
