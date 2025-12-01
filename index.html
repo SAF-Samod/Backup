@@ -503,8 +503,10 @@
             progress = progress * progress * (3 - 2 * progress); 
 
             const aspect = window.innerWidth / window.innerHeight;
-            const moveX = 14 * aspect; 
-            const moveY = 10;          
+            
+            // UPDATED: Push to extreme right upper corner (Fixed to stay in bounds)
+            const moveX = 15 * aspect; 
+            const moveY = 14;          
             
             sceneGroup.position.x = moveX * progress;
             sceneGroup.position.y = moveY * progress;
