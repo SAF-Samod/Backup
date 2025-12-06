@@ -253,7 +253,8 @@
         .profile-container:hover .cyber-img {
             filter: contrast(1.1) brightness(1.2) saturate(1.2); 
             mix-blend-mode: normal;
-            animation: img-glitch 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
+            /* REPLACED 'infinite' with 'both' (runs once) */
+            animation: img-glitch 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
         }
 
         @keyframes img-glitch {
