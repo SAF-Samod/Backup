@@ -14,6 +14,7 @@
             --neon-cyan: #00f3ff;
             --neon-pink: #ff00ff;
             --neon-green: #0aff00;
+            --neon-yellow: #fcee0a;
             --bg-color: #050505;
         }
 
@@ -325,7 +326,7 @@
         /* --- SKILLS SECTION STYLES --- */
         .skills-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 2rem;
             margin-bottom: 3rem;
         }
@@ -353,32 +354,23 @@
         }
 
         .skill-item {
-            margin-bottom: 1.2rem;
+            margin-bottom: 0.8rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 0.5rem;
+        }
+
+        .skill-item:last-child {
+            border-bottom: none;
         }
 
         .skill-item span {
             display: block;
             font-family: 'VT323', monospace;
             color: #ccc;
-            margin-bottom: 0.3rem;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
         }
 
-        .bar-bg {
-            width: 100%;
-            height: 6px;
-            background: #222;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .bar-fill {
-            height: 100%;
-            background: var(--neon-pink);
-            box-shadow: 0 0 8px var(--neon-pink);
-            position: relative;
-        }
-
+        /* Link Cards */
         .links-section {
             display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px;
         }
@@ -514,35 +506,32 @@
                 <!-- 3D Skills -->
                 <div class="skill-category">
                     <h3>&gt; 3D_VISUALIZATION</h3>
-                    <div class="skill-item">
-                        <span>BLENDER</span>
-                        <div class="bar-bg"><div class="bar-fill" style="width: 90%;"></div></div>
-                    </div>
-                    <div class="skill-item">
-                        <span>3DS MAX</span>
-                        <div class="bar-bg"><div class="bar-fill" style="width: 75%;"></div></div>
-                    </div>
-                    <div class="skill-item">
-                        <span>MAYA</span>
-                        <div class="bar-bg"><div class="bar-fill" style="width: 70%;"></div></div>
-                    </div>
+                    <div class="skill-item"><span>BLENDER</span></div>
+                    <div class="skill-item"><span>3DS MAX</span></div>
+                    <div class="skill-item"><span>MAYA</span></div>
                 </div>
 
                 <!-- Music/Audio Skills -->
                 <div class="skill-category" style="border-left-color: var(--neon-pink);">
                     <h3 style="color: var(--neon-pink);">&gt; AUDIO_ENGINEERING</h3>
-                    <div class="skill-item">
-                        <span>FL STUDIO</span>
-                        <div class="bar-bg"><div class="bar-fill" style="width: 95%; background: var(--neon-cyan); box-shadow: 0 0 8px var(--neon-cyan);"></div></div>
-                    </div>
-                    <div class="skill-item">
-                        <span>SOUND DESIGN</span>
-                        <div class="bar-bg"><div class="bar-fill" style="width: 85%; background: var(--neon-cyan); box-shadow: 0 0 8px var(--neon-cyan);"></div></div>
-                    </div>
-                    <div class="skill-item">
-                        <span>MIXING & MASTERING</span>
-                        <div class="bar-bg"><div class="bar-fill" style="width: 80%; background: var(--neon-cyan); box-shadow: 0 0 8px var(--neon-cyan);"></div></div>
-                    </div>
+                    <div class="skill-item"><span>FL STUDIO</span></div>
+                    <div class="skill-item"><span>SOUND DESIGN</span></div>
+                    <div class="skill-item"><span>MIXING & MASTERING</span></div>
+                </div>
+
+                <!-- Coding Skills (New) -->
+                <div class="skill-category" style="border-left-color: var(--neon-green);">
+                    <h3 style="color: var(--neon-green);">&gt; PROGRAMMING_LANGUAGES</h3>
+                    <div class="skill-item"><span>C++</span></div>
+                    <div class="skill-item"><span>JAVA</span></div>
+                    <div class="skill-item"><span style="opacity: 0.7;">ASSEMBLY [PLANNED]</span></div>
+                </div>
+
+                <!-- Linux Skills (New) -->
+                <div class="skill-category" style="border-left-color: var(--neon-yellow);">
+                    <h3 style="color: var(--neon-yellow);">&gt; LINUX_ENVIRONMENTS</h3>
+                    <div class="skill-item"><span>FEDORA</span></div>
+                    <div class="skill-item"><span>ENDEAVOUROS</span></div>
                 </div>
             </div>
 
