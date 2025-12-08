@@ -351,6 +351,13 @@
             margin-bottom: 1.2rem;
             font-size: 1.1rem;
             letter-spacing: 1px;
+            /* FIXED: Force titles to wrap nicely */
+            white-space: normal;
+            word-break: break-word;
+            line-height: 1.4;
+            min-height: 3rem; /* Ensures equal height for alignment */
+            display: flex;
+            align-items: center;
         }
 
         .skill-item {
