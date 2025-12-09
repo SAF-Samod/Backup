@@ -224,7 +224,7 @@
         .about-content-wrapper {
             display: flex;
             gap: 2rem;
-            align-items: center; /* FIXED: Centers text vertically with image */
+            align-items: center; 
         }
 
         .terminal-text {
@@ -235,7 +235,6 @@
         /* PROFILE IMAGE CONTAINER */
         .profile-container {
             flex: 0 0 250px; 
-            /* FIXED: Standard Portrait Ratio to fix scaling */
             aspect-ratio: 3 / 4; 
             position: relative;
             border: 2px solid var(--neon-cyan);
@@ -246,19 +245,16 @@
 
         /* CYBERPUNK IMAGE STYLES */
         .cyber-img {
-            /* FIXED: Absolute positioning for perfect overlap */
             position: absolute; 
             top: 5px; left: 5px;
             width: calc(100% - 10px);
             height: calc(100% - 10px);
-            object-fit: cover; /* Ensures no stretching */
+            object-fit: cover; 
             display: block;
             
-            /* Initial "Encrypted" State */
             filter: contrast(1.2) sepia(100%) hue-rotate(180deg) saturate(1.5);
             mix-blend-mode: luminosity;
             
-            /* Animation on base class for mouse-leave event */
             animation: encrypt-glitch 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
         }
 
@@ -579,6 +575,12 @@
                 <a href="mailto:samodabhimana@gmail.com" target="_blank" class="card" style="border-color: var(--neon-green);">
                     <h3 style="color: var(--neon-green);">ESTABLISH UPLINK</h3>
                     <p>Send transmission to: <strong>samodabhimana@gmail.com</strong></p>
+                </a>
+                
+                <!-- NEW RESUME BUTTON -->
+                <a href="CV.pdf" target="_blank" class="card" style="border-color: var(--neon-yellow);">
+                    <h3 style="color: var(--neon-yellow);">DOWNLOAD DATA_LOG</h3>
+                    <p>Access full service record (CV/Resume).</p>
                 </a>
             </section>
 
