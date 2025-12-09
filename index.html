@@ -327,22 +327,30 @@
             margin-bottom: 3rem;
         }
 
-        /* Glitch animations for skills */
-        @keyframes skill-glitch-in {
-            0% { transform: translate(0); box-shadow: 0 0 0 transparent; }
-            20% { transform: translate(-2px, 2px); box-shadow: 0 0 10px var(--neon-cyan); }
-            40% { transform: translate(2px, -2px); box-shadow: 0 0 5px var(--neon-pink); }
-            60% { transform: translate(-1px, 1px); box-shadow: 0 0 15px var(--neon-cyan); }
-            80% { transform: translate(1px, -1px); }
-            100% { transform: translate(0); box-shadow: 0 0 15px rgba(0, 243, 255, 0.2); }
+        /* TEXT DISTORTION GLITCH */
+        @keyframes text-warp {
+            0% { transform: skewX(0deg); text-shadow: 0 0 0 transparent; }
+            20% { transform: skewX(-20deg); text-shadow: -2px 0 var(--neon-pink), 2px 0 var(--neon-cyan); }
+            40% { transform: skewX(15deg); text-shadow: 2px 0 var(--neon-pink), -2px 0 var(--neon-cyan); opacity: 0.8; }
+            60% { transform: skewX(-10deg); text-shadow: 0 0 5px var(--neon-green); }
+            80% { transform: skewX(5deg); }
+            100% { transform: skewX(0deg); text-shadow: 0 0 2px var(--neon-cyan); }
         }
 
-        @keyframes skill-glitch-out {
-            0% { transform: translate(0); box-shadow: 0 0 15px rgba(0, 243, 255, 0.2); }
-            20% { transform: translate(-2px, 2px); box-shadow: 0 0 10px var(--neon-pink); }
-            40% { transform: translate(2px, -2px); }
-            60% { transform: translate(-1px, 1px); box-shadow: 0 0 5px var(--neon-cyan); }
-            100% { transform: translate(0); box-shadow: none; }
+        /* BOX SHAKE & FLASH */
+        @keyframes box-shake {
+            0% { border-color: #333; }
+            20% { transform: translate(-2px, 2px); border-color: var(--neon-pink); }
+            40% { transform: translate(2px, -2px); border-color: var(--neon-cyan); }
+            60% { transform: translate(-1px, 1px); }
+            100% { transform: translate(0); border-color: var(--neon-cyan); box-shadow: 0 0 15px rgba(0, 243, 255, 0.1); }
+        }
+
+        @keyframes box-exit {
+            0% { border-color: var(--neon-cyan); }
+            20% { transform: translate(2px, -2px); border-color: #ff0000; } /* Red Flash */
+            40% { transform: translate(-2px, 2px); }
+            100% { transform: translate(0); border-color: #333; box-shadow: none; }
         }
 
         .skill-category {
@@ -352,13 +360,20 @@
             backdrop-filter: blur(5px);
             border-left: 3px solid var(--neon-cyan);
             
-            /* Apply exit glitch on leave (also runs on load, which is cool for "init") */
-            animation: skill-glitch-out 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+            /* Apply exit animation on leave */
+            animation: box-exit 0.3s ease-out both;
         }
 
         .skill-category:hover {
-            /* Apply enter glitch on hover */
-            animation: skill-glitch-in 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+            /* Apply shake animation on hover */
+            animation: box-shake 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+        }
+
+        /* APPLY TEXT DISTORTION ON HOVER */
+        .skill-category:hover h3,
+        .skill-category:hover .skill-item span {
+            animation: text-warp 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+            display: inline-block; /* Essential for transforms */
         }
 
         .skill-category h3 {
@@ -371,7 +386,7 @@
             white-space: normal;
             word-break: break-word;
             line-height: 1.4;
-            min-height: 3rem; /* Ensures equal height for alignment */
+            min-height: 3rem; 
             display: flex;
             align-items: center;
         }
