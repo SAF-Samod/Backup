@@ -327,18 +327,38 @@
             margin-bottom: 3rem;
         }
 
+        /* Glitch animations for skills */
+        @keyframes skill-glitch-in {
+            0% { transform: translate(0); box-shadow: 0 0 0 transparent; }
+            20% { transform: translate(-2px, 2px); box-shadow: 0 0 10px var(--neon-cyan); }
+            40% { transform: translate(2px, -2px); box-shadow: 0 0 5px var(--neon-pink); }
+            60% { transform: translate(-1px, 1px); box-shadow: 0 0 15px var(--neon-cyan); }
+            80% { transform: translate(1px, -1px); }
+            100% { transform: translate(0); box-shadow: 0 0 15px rgba(0, 243, 255, 0.2); }
+        }
+
+        @keyframes skill-glitch-out {
+            0% { transform: translate(0); box-shadow: 0 0 15px rgba(0, 243, 255, 0.2); }
+            20% { transform: translate(-2px, 2px); box-shadow: 0 0 10px var(--neon-pink); }
+            40% { transform: translate(2px, -2px); }
+            60% { transform: translate(-1px, 1px); box-shadow: 0 0 5px var(--neon-cyan); }
+            100% { transform: translate(0); box-shadow: none; }
+        }
+
         .skill-category {
             background: rgba(20, 20, 20, 0.6);
             border: 1px solid #333;
             padding: 1.5rem;
             backdrop-filter: blur(5px);
             border-left: 3px solid var(--neon-cyan);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            
+            /* Apply exit glitch on leave (also runs on load, which is cool for "init") */
+            animation: skill-glitch-out 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
         }
 
         .skill-category:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 0 15px rgba(0, 243, 255, 0.1);
+            /* Apply enter glitch on hover */
+            animation: skill-glitch-in 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
         }
 
         .skill-category h3 {
